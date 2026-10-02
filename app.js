@@ -18,18 +18,17 @@ function layout(){
  const size=n>20?1200:n>14?720:n>10?560:0;
  c.style.minWidth=mobile?'0':size?`${size}px`:'0';
  c.style.minHeight='0';
- c.style.height=track?`${Math.max(640,n*54)}px`:'';
+ c.style.height=track?`${Math.max(300,Math.ceil((n-2)/2)*50+100)}px`:'';
  $('#table-badge').textContent=`${n} 人 · ${track?'跑道桌':'圆桌'}`;
 }
 function trackPoint(index,n,width,height){
- const radius=(width-84)/2,top=48+radius,bottom=height-48-radius;
- const straight=bottom-top,quarter=Math.PI*radius/2;
- let d=index/n*(4*quarter+2*straight);
- if(d<=quarter){const a=-Math.PI/2+d/radius;return {x:width/2+radius*Math.cos(a),y:top+radius*Math.sin(a)}}
- d-=quarter;if(d<=straight)return {x:width/2+radius,y:top+d};
- d-=straight;if(d<=2*quarter){const a=d/radius;return {x:width/2+radius*Math.cos(a),y:bottom+radius*Math.sin(a)}}
- d-=2*quarter;if(d<=straight)return {x:width/2-radius,y:bottom-d};
- d-=straight;const a=Math.PI+d/radius;return {x:width/2+radius*Math.cos(a),y:top+radius*Math.sin(a)};
+ // One seat at each end; distribute the rest along the two straight sides.
+ const right=Math.ceil((n-2)/2),left=n-2-right;
+ if(index===0)return {x:width/2,y:26};
+ if(index<=right)return {x:width-44,y:76+(index-1)*(height-152)/Math.max(1,right-1)};
+ if(index===right+1)return {x:width/2,y:height-26};
+ const i=index-right-2;
+ return {x:44,y:height-76-i*(height-152)/Math.max(1,left-1)};
 }
 function point(index){const r=$('#canvas').getBoundingClientRect();if($('#canvas').classList.contains('racetrack'))return trackPoint(index,people.length,r.width,r.height);const angle=index/people.length*Math.PI*2-Math.PI/2;return {x:r.width/2+Math.cos(angle)*(r.width/2-(mobileQuery.matches?38:50)),y:r.height/2+Math.sin(angle)*(r.height/2-(mobileQuery.matches?38:50))}}
 mobileQuery.addEventListener('change',()=>{endDrag(true);if(people.length){layout();render()}});
