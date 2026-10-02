@@ -18,17 +18,22 @@ function layout(){
  const size=n>20?1200:n>14?720:n>10?560:0;
  c.style.minWidth=mobile?'0':size?`${size}px`:'0';
  c.style.minHeight='0';
- c.style.height=track?`${Math.max(300,Math.ceil((n-2)/2)*50+100)}px`:'';
+ c.style.height=track?`${Math.max(420,2*(Math.max((c.clientWidth-60)/2,140)+24)+(Math.ceil(Math.max(0,n-12)/2)+1)*42)}px`:'';
  $('#table-badge').textContent=`${n} 人 · ${track?'跑道桌':'圆桌'}`;
 }
 function trackPoint(index,n,width,height){
- // One seat at each end; distribute the rest along the two straight sides.
- const right=Math.ceil((n-2)/2),left=n-2-right;
- if(index===0)return {x:width/2,y:26};
- if(index<=right)return {x:width-44,y:76+(index-1)*(height-152)/Math.max(1,right-1)};
- if(index===right+1)return {x:width/2,y:height-26};
- const i=index-right-2;
- return {x:44,y:height-76-i*(height-152)/Math.max(1,left-1)};
+ const radius=(width-60)/2,verticalRadius=Math.max(radius,140),top=verticalRadius+24,bottom=height-verticalRadius-24;
+ if(n<12){const angle=index/n*Math.PI*2-Math.PI/2;return {x:width/2+radius*Math.cos(angle),y:height/2+(height/2-26)*Math.sin(angle)}}
+ const right=Math.ceil((n-12)/2),left=n-12-right;
+ const arc=(angle,center)=>({x:width/2+radius*Math.cos(angle*Math.PI/180),y:center+verticalRadius*Math.sin(angle*Math.PI/180)});
+ if(index<4)return arc(-105+index*30,top);
+ index-=4;
+ if(index<right)return {x:width-30,y:top+(index+1)*(bottom-top)/(right+1)};
+ index-=right;
+ if(index<6)return arc(15+index*30,bottom);
+ index-=6;
+ if(index<left)return {x:30,y:bottom-(index+1)*(bottom-top)/(left+1)};
+ index-=left;return arc(-165+index*30,top);
 }
 function point(index){const r=$('#canvas').getBoundingClientRect();if($('#canvas').classList.contains('racetrack'))return trackPoint(index,people.length,r.width,r.height);const angle=index/people.length*Math.PI*2-Math.PI/2;return {x:r.width/2+Math.cos(angle)*(r.width/2-(mobileQuery.matches?38:50)),y:r.height/2+Math.sin(angle)*(r.height/2-(mobileQuery.matches?38:50))}}
 mobileQuery.addEventListener('change',()=>{endDrag(true);if(people.length){layout();render()}});
