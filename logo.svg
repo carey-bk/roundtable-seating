@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <title>围坐 · 围字标识</title>
+  <rect width="128" height="128" rx="28" fill="#922634"/>
+  <rect x="23" y="23" width="82" height="82" rx="13" stroke="#F3D392" stroke-width="7"/>
+  <g stroke="#F3D392" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M44 47H84M42 62H86"/>
+    <path d="M42 77H86V87H79"/>
+    <path d="M64 39V93"/>
+  </g>
+</svg>

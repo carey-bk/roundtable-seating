@@ -10,3 +10,5 @@
 /* Six seats on each curved end preserve the round-table silhouette. */
 @media(max-width:760px){.racetrack .seat{width:60px;height:36px;min-height:36px;padding:3px 2px;border-radius:8px;box-shadow:0 2px 5px #68212110}.racetrack .seat .num{font-size:10px;line-height:11px;margin:0 0 1px}.racetrack .seat .name{font-size:12px;line-height:16px;max-height:16px}.racetrack .table-surface{inset:52px;border-radius:999px}.racetrack .table-script{font-size:17px}.racetrack .table-inner strong{font-size:26px}.racetrack .table-inner small{font-size:10px}}
 @media(max-width:360px){.racetrack .seat{width:50px}.racetrack .seat .name{font-size:11px}.racetrack .table-surface{left:48px;right:48px}}
+
+.brandmark{display:block;width:44px;height:44px;padding:0;border-radius:10px;flex-shrink:0;background:transparent}
