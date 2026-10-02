@@ -1,10 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
-  <title>围坐 · 围字标识</title>
-  <rect width="128" height="128" rx="28" fill="#922634"/>
-  <rect x="23" y="23" width="82" height="82" rx="13" stroke="#F3D392" stroke-width="7"/>
-  <g stroke="#F3D392" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M44 47H84M42 62H86"/>
-    <path d="M42 77H86V87H79"/>
-    <path d="M64 39V93"/>
-  </g>
+  <title>围座 · 围字圆形标识</title>
+  <circle cx="64" cy="64" r="63" fill="#9E2433"/>
+  <circle cx="64" cy="64" r="44" stroke="#D8BE8A" stroke-width="6"/>
+  <path d="M44 47H84M41 63H87M42 79H83V87H76M64 38V94" stroke="#F8F3EA" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

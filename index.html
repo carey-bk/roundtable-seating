@@ -1,1 +1,48 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>围坐 · 圆桌排座</title><meta name="description" content="输入名单，实时拖动安排 4–30 人圆桌座位。"><link rel="icon" type="image/svg+xml" href="logo.svg?v=1"><link rel="stylesheet" href="style.css?v=6"></head><body><header><a class="brand" href="./"><img class="brandmark" src="logo.svg" width="44" height="44" alt="">围坐<span class="brand-sub">圆桌排座</span></a><span class="header-note">好好安排，好好相聚</span></header><main><section class="intro"><div><span class="eyebrow">ROUND TABLE PLANNER</span><h1>每个人，都有好位置。</h1><p>先填入名单，再拖动座位。让一桌人的相聚恰到好处。</p></div><div class="steps"><span id="step1" class="active">01 填写名单</span><i></i><span id="step2">02 调整座位</span></div></section><div class="workspace"><section class="panel names-panel"><div class="section-heading"><div><span class="eyebrow">GUEST LIST</span><h2>这一桌，谁来？</h2></div><span class="badge">4–30 人</span></div><div class="count-row"><label for="count">用餐人数</label><div class="stepper"><button id="minus" aria-label="减少一人">−</button><input id="count" type="number" min="4" max="30" value="8" aria-label="用餐人数"><button id="plus" aria-label="增加一人">＋</button></div></div><details id="import-box" open><summary>一键导入名单 <span>批量填写</span></summary><div class="import-content"><label for="bulk">粘贴名单，按原顺序自动编号</label><textarea id="bulk" rows="3" placeholder="爷爷 奶奶，女方爸爸，女方妈妈&#10;或粘贴：1.爷爷 2.奶奶 …"></textarea><p class="help">支持空格、逗号、换行或空行；可带数字序号。</p><div class="import-actions"><button id="import" class="secondary">导入名单</button></div></div></details><div class="list-caption"><span>序号 / 姓名</span><span id="filled">已填写 0 / 8</span></div><div id="fields" class="fields"></div><p id="message" class="message" role="status" aria-live="polite"></p><button id="generate" class="primary">生成圆桌座位图</button><p class="privacy">名单仅在当前页面使用，刷新后会清空。</p></section><section class="panel table-panel"><div class="section-heading"><div><span class="eyebrow">SEATING PLAN</span><h2>围桌而坐</h2></div><span id="table-badge" class="badge">等待名单</span></div><div id="empty" class="empty"><div class="empty-ring"><span>1</span><span>2</span><span>3</span><span>4</span><b>围坐</b></div><h3>先认识这一桌的人</h3><p>填写或导入 4–30 位用餐者，<br>即可生成可拖动的圆桌座位图。</p></div><div id="seating" hidden><div class="table-help"><span><b class="dot"></b>拖动姓名，实时调整顺序</span><span>从顶部顺时针排列</span></div><div class="canvas-scroll"><div id="canvas" class="canvas"><div class="table-surface"><div class="table-inner"><span class="table-script">团圆一桌</span><strong id="guest-total">8<span>位用餐者</span></strong><small>相邻而坐 · 尽兴而谈</small></div></div><div id="seats"></div></div></div><div class="table-footer"><p>也可选中座位后，按方向键移动；Esc 取消本次拖动。</p><button id="reset" class="text-button">恢复录入顺序</button></div><div class="order-heading">顺时针座位顺序</div><ol id="order" class="order"></ol><p id="announcement" class="sr-only" role="status" aria-live="polite"></p></div></section></div><footer>围坐 <span>·</span> 把相聚安排得更从容</footer></main><script src="app.js?v=5"></script></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#F8F3EA">
+  <title>围座 · 让相聚，各得其所。</title>
+  <meta name="description" content="把熟悉的人安排在身边，把一桌人的相聚安排得刚刚好。支持 4–30 人名单导入与实时拖动排座。">
+  <link rel="icon" type="image/svg+xml" href="logo.svg?v=2">
+  <link rel="stylesheet" href="style.css?v=7">
+</head>
+<body>
+<header><a class="brand" href="./" aria-label="围座首页"><img class="brandmark" src="logo.svg?v=2" width="40" height="40" alt=""><span>围座</span></a></header>
+<main>
+  <div class="workspace">
+    <section class="configuration" aria-label="名单与人数">
+      <div class="intro"><h1>每个人，<br class="desktop-break">都有好位置。</h1><p>把熟悉的人安排在身边，<br>把一桌人的相聚安排得刚刚好。</p></div>
+      <section class="names-panel">
+        <div class="section-heading"><h2>这一桌，谁来？</h2><span class="badge">4–30 人</span></div>
+        <div class="count-row"><label for="count">这一桌坐几位？</label><div class="stepper"><button id="minus" aria-label="减少一人">−</button><input id="count" type="number" min="4" max="30" value="8" aria-label="这一桌坐几位？"><button id="plus" aria-label="增加一人">＋</button></div></div>
+        <details id="import-box" open>
+          <summary>把名单贴进来<span>批量导入</span></summary>
+          <div class="import-content"><label for="bulk">粘贴名单，按顺序自动编号</label><textarea id="bulk" rows="3" placeholder="爷爷 奶奶，爸爸，妈妈&#10;也可以粘贴：1.爷爷 2.奶奶 …"></textarea><p class="help">空格、逗号、换行均可分隔，支持数字序号。</p><div class="import-actions"><button id="import" class="secondary">导入名单</button></div></div>
+        </details>
+        <div class="list-caption"><span>序号 / 姓名</span><span id="filled">已填写 0 / 8</span></div>
+        <div id="fields" class="fields"></div>
+        <p id="message" class="message" role="status" aria-live="polite"></p>
+        <button id="generate" class="primary">生成座位图</button>
+        <p class="privacy">名单仅在当前页面使用，刷新后会清空。</p>
+      </section>
+    </section>
+    <section class="table-panel" aria-labelledby="seating-title">
+      <div class="section-heading"><h2 id="seating-title">围桌而坐</h2><span id="table-badge" class="badge">等待名单</span></div>
+      <div id="empty" class="empty"><div class="empty-ring" aria-hidden="true"><span>01</span><span>02</span><span>03</span><span>04</span><b>相聚有时<br>落座有序</b></div><h3>先认识这一桌的人</h3><p>填写或导入名单，<br>让每一个位置，都有熟悉的名字。</p></div>
+      <div id="seating" hidden>
+        <div class="table-help"><span>拖动姓名，实时调整顺序</span><span>座位自上方起，顺时针排列</span></div>
+        <div class="canvas-scroll"><div id="canvas" class="canvas"><div class="table-surface"><div class="table-inner"><span class="table-script">团圆一桌</span><strong id="guest-total"><span class="guest-number">8</span><span class="guest-unit">人</span></strong><small>相邻而坐 · 尽兴而谈</small></div></div><div id="seat-target" hidden aria-hidden="true"></div><div id="seats"></div></div></div>
+        <div class="table-footer"><p>方向键也能调整座位，Esc 取消拖动。</p><button id="reset" class="text-button">恢复录入顺序</button></div>
+        <div class="order-heading">座位顺序</div><ol id="order" class="order"></ol>
+        <p id="announcement" class="sr-only" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+  </div>
+  <footer>让相聚，各得其所。</footer>
+</main>
+<script src="app.js?v=7"></script>
+</body>
+</html>
