@@ -18,22 +18,41 @@ function layout(){
  const size=n>20?1200:n>14?720:n>10?560:0;
  c.style.minWidth=mobile?'0':size?`${size}px`:'0';
  c.style.minHeight='0';
- c.style.height=track?`${Math.max(420,2*(Math.max((c.clientWidth-60)/2,140)+24)+(Math.ceil(Math.max(0,n-12)/2)+1)*42)}px`:'';
+ let height=Math.max(420,2*(Math.max((c.clientWidth-60)/2,140)+24)+(Math.ceil(Math.max(0,n-12)/2)+1)*42);
+ if(track){
+  const cardWidth=matchMedia('(max-width:360px)').matches?50:60;
+  for(let attempt=0;attempt<250;attempt++){
+   const points=Array.from({length:n},(_,i)=>trackPoint(i,n,c.clientWidth,height));
+   const collision=points.some((a,i)=>points.slice(i+1).some(b=>Math.abs(a.x-b.x)<cardWidth+2&&Math.abs(a.y-b.y)<38));
+   if(!collision)break;
+   height+=4;
+  }
+ }
+ c.style.height=track?`${height}px`:'';
  $('#table-badge').textContent=`${n} 人 · ${track?'跑道桌':'圆桌'}`;
 }
+let trackCache={key:'',points:[]};
 function trackPoint(index,n,width,height){
- const radius=(width-60)/2,verticalRadius=Math.max(radius,140),top=verticalRadius+24,bottom=height-verticalRadius-24;
- if(n<12){const angle=index/n*Math.PI*2-Math.PI/2;return {x:width/2+radius*Math.cos(angle),y:height/2+(height/2-26)*Math.sin(angle)}}
- const right=Math.ceil((n-12)/2),left=n-12-right;
- const arc=(angle,center)=>({x:width/2+radius*Math.cos(angle*Math.PI/180),y:center+verticalRadius*Math.sin(angle*Math.PI/180)});
- if(index<4)return arc(-105+index*30,top);
- index-=4;
- if(index<right)return {x:width-30,y:top+(index+1)*(bottom-top)/(right+1)};
- index-=right;
- if(index<6)return arc(15+index*30,bottom);
- index-=6;
- if(index<left)return {x:30,y:bottom-(index+1)*(bottom-top)/(left+1)};
- index-=left;return arc(-165+index*30,top);
+ const key=`${n}:${width}:${height}`;
+ if(trackCache.key!==key){
+  const rx=(width-60)/2,ry=Math.min(Math.max(rx,140),(height-48)/2);
+  const top=24+ry,bottom=height-24-ry,path=[];
+  const add=(x,y)=>{const prev=path[path.length-1];path.push({x,y,length:prev?prev.length+Math.hypot(x-prev.x,y-prev.y):0})};
+  const arc=(start,end,cy)=>{for(let j=0;j<=180;j++){const t=(start+(end-start)*j/180)*Math.PI/180;add(width/2+rx*Math.cos(t),cy+ry*Math.sin(t))}};
+  arc(-90,0,top);add(width/2+rx,bottom);arc(0,180,bottom);
+  add(width/2-rx,top);arc(180,270,top);
+  const total=path[path.length-1].length,step=total/n;
+  const points=Array.from({length:n},(_,i)=>{
+   // Even counts straddle the top symmetrically; one continuous perimeter.
+   const distance=((i-(n%2===0?.5:0))*step+total)%total;
+   let lo=0,hi=path.length-1;
+   while(lo+1<hi){const mid=(lo+hi)>>1;if(path[mid].length<distance)lo=mid;else hi=mid}
+   const a=path[lo],b=path[hi],fraction=(distance-a.length)/(b.length-a.length||1);
+   return {x:a.x+(b.x-a.x)*fraction,y:a.y+(b.y-a.y)*fraction};
+  });
+  trackCache={key,points};
+ }
+ return trackCache.points[index];
 }
 function point(index){const r=$('#canvas').getBoundingClientRect();if($('#canvas').classList.contains('racetrack'))return trackPoint(index,people.length,r.width,r.height);const angle=index/people.length*Math.PI*2-Math.PI/2;return {x:r.width/2+Math.cos(angle)*(r.width/2-(mobileQuery.matches?38:50)),y:r.height/2+Math.sin(angle)*(r.height/2-(mobileQuery.matches?38:50))}}
 mobileQuery.addEventListener('change',()=>{endDrag(true);if(people.length){layout();render()}});
